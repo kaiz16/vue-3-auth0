@@ -2,6 +2,7 @@ import createAuth0Client from '@auth0/auth0-spa-js'
 import { computed, reactive, watchEffect } from 'vue'
 
 let client
+export const getInstance = () => client;
 const state = reactive({
   loading: true,
   isAuthenticated: false,
@@ -59,7 +60,7 @@ function logout(o) {
   return client.logout(o)
 }
 
-const authPlugin = {
+const authPlugin = reactive({
   isAuthenticated: computed(() => state.isAuthenticated),
   loading: computed(() => state.loading),
   user: computed(() => state.user),
@@ -70,14 +71,14 @@ const authPlugin = {
   loginWithRedirect,
   loginWithPopup,
   logout,
-}
+})
 
 export const routeGuard = (to, from, next) => {
   const { isAuthenticated, loading, loginWithRedirect } = authPlugin
 
   const verify = () => {
     // If the user is authenticated, continue with the route
-    if (isAuthenticated.value) {
+    if (isAuthenticated) {
       return next()
     }
 
@@ -86,13 +87,13 @@ export const routeGuard = (to, from, next) => {
   }
 
   // If loading has already finished, check our auth state using `fn()`
-  if (!loading.value) {
+  if (!loading) {
     return verify()
   }
 
   // Watch for the loading property to change before we check isAuthenticated
   watchEffect(() => {
-    if (loading.value === false) {
+    if (loading === false) {
       return verify()
     }
   })
@@ -114,7 +115,6 @@ export const setupAuth = async (options, callbackRedirect) => {
     ) {
       // handle the redirect and retrieve tokens
       const { appState } = await client.handleRedirectCallback()
-
       // Notify subscribers that the redirect callback has happened, passing the appState
       // (useful for retrieving any pre-authentication state)
       callbackRedirect(appState)

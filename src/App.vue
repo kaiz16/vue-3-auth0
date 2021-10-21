@@ -1,8 +1,8 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Welcome to Your Vue.js App" />
-  <button v-if="!$auth.isAuthenticated.value" @click="login">Login</button>
-  <button v-if="$auth.isAuthenticated.value" @click="logout">Logout</button>
+  <button v-if="!$auth.isAuthenticated" @click="login">Login</button>
+  <button v-if="$auth.isAuthenticated" @click="logout">Logout</button>
 </template>
 
 <script>
@@ -14,9 +14,9 @@ export default {
     HelloWorld,
   },
   watch: {
-    "$auth.isAuthenticated.value": {
+    "$auth.isAuthenticated": {
       async handler() {
-        let status = this.$auth.isAuthenticated.value;
+        let status = this.$auth.isAuthenticated;
         // logged in
         if (status === true) {
           console.log("logged in");
