@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -7,13 +6,6 @@ import { setupAuth } from './auth0/authWrapper'
 
 let app = createApp(App).use(router)
 
-// authConfig.redirect_uri = (appState) => {
-//     router.push(
-//         appState && appState.targetUrl
-//           ? appState.targetUrl
-//           : '/'
-//       );
-// }
 function callbackRedirect() {
   return window.location.origin
 }

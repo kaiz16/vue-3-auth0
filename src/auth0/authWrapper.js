@@ -130,6 +130,7 @@ export const setupAuth = async (options, callbackRedirect) => {
 
   return {
     install: (app) => {
+      app.provide("$auth", authPlugin);
       app.config.globalProperties.$auth = authPlugin
     },
   }
